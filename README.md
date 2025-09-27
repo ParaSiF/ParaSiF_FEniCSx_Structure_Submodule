@@ -1,4 +1,4 @@
-# ParaSiF FEniCSx Solver
+# ParaSiF FEniCSx Structure Solver
 
 ## Overview
 
@@ -8,7 +8,7 @@ ParaSiF FEniCSx (v0.9.0) solver
 
 * src
 
-It contains the source code on the FEniCSx solvers for ParaSiF coupled framework.
+It contains the source code on the FEniCSx structure solvers for ParaSiF coupled framework.
 
 * single_benchmark
 

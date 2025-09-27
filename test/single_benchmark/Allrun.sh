@@ -4,7 +4,7 @@
 cd ${0%/*} || exit 1
 
 export PYTHONPATH=${PWD}/../../src:$PYTHONPATH
-export PYTHONPATH=${PWD}/../../../../coupling_lib/MUI/wrappers/Python:$PYTHONPATH
+export PYTHONPATH=${PWD}/../../../../../coupling_lib/MUI/wrappers/Python:$PYTHONPATH
 
 domainStructure=${PWD}/structureDomain
 
