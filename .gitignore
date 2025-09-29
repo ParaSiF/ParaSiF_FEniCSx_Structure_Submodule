@@ -5,4 +5,5 @@ test/coupled_benchmark/dummyOF/PUSHER_FETCHER_1
 test/coupled_benchmark/dummyOF/dispCpp.txt
 *result_compare.png
 **/.vscode/
+**/build/
 
