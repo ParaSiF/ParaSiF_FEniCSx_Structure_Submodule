@@ -60,13 +60,13 @@ struct pusher_fetcher_config {
   using time_type = REAL; // INT-typed time stamp might be an alternative
   using iterator_type = INT; //- Typically INT for sub-iteration count
   using data_types = type_list<uint32_t,
-								 uint64_t,
-								 int32_t,
-								 int64_t,
-								 double,
-								 float,
-								 std::string
-								>;
+                              uint64_t,
+                              int32_t,
+                              int64_t,
+                              double,
+                              float,
+                              std::string
+                              >;
 };
 }
 

@@ -161,11 +161,11 @@ class hyperElastic:
 
         dofs_fetch_list = self.dofs_list(mesh, V, 2)
 
-        xyz_fetch = self.xyz_np(dofs_fetch_list, V, gdim)
+        xyz_fetch = self.xyz_np(dofs_fetch_list, V, gdim, dtype=self.dtypeFetch)
 
         dofs_push_list = self.dofs_list(mesh, V, 2)
 
-        xyz_push = self.xyz_np(dofs_push_list, V, gdim)
+        xyz_push = self.xyz_np(dofs_push_list, V, gdim, dtype=self.dtypePush)
 
         #===========================================
         #%% Define facet areas

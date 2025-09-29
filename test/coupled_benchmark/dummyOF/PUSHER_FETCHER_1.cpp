@@ -5,7 +5,7 @@
  *      Author: Wendi Liu
  */
 
-#include "../../../../../../coupling_lib/MUI/src/mui.h"
+#include "mui.h"
 #include <iostream>
 #include <fstream>
 #include "pusher_fetcher_config.h"
@@ -113,7 +113,7 @@ int main(int argc, char ** argv) {
     ifs.announce_recv_span( 0, steps*10, recv_region );
 
     // define spatial and temporal samplers
-    sampler_pseudo_n2_linear<mui::pusher_fetcher_config> s1(r);
+    sampler_pseudo_nearest_neighbor<mui::pusher_fetcher_config> s1(r);
     temporal_sampler_exact<mui::pusher_fetcher_config> s2;
 
     // commit ZERO step

@@ -164,9 +164,9 @@ class linearElastic:
 
         dofs_push_list = self.dofs_list(domain, V, 2)
 
-        xyz_fetch = self.xyz_np(self.flexdofs, V, gdim)
+        xyz_fetch = self.xyz_np(self.flexdofs, V, gdim, dtype=self.dtypeFetch)
 
-        xyz_push = self.xyz_np(self.flexdofs, V, gdim)
+        xyz_push = self.xyz_np(self.flexdofs, V, gdim, dtype=self.dtypePush)
 
         #===========================================
         #%% Define facet areas

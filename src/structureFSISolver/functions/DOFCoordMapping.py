@@ -53,8 +53,8 @@ class DOFCoordMapping:
     def dofs_list(self, MeshFunction, FunctionSpace, boundary):
         return list(self.flexdofs)
 
-    def xyz_np(self, dofs_list, FunctionSpace, dimension):
-        xyz_np = np.zeros((len(dofs_list), dimension))
+    def xyz_np(self, dofs_list, FunctionSpace, dimension, dtype=None):
+        xyz_np = np.zeros((len(dofs_list), dimension), dtype=dtype)
         for i, p in enumerate(dofs_list):
             xyz_np[i] = self.dofs_to_xyz(FunctionSpace, dimension)[p]
         return xyz_np

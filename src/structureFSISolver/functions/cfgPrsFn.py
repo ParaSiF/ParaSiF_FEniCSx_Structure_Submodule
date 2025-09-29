@@ -70,6 +70,22 @@ class readData:
     def iMUIPushMany (self):
         # F-Use normal push function; T-Use push_many function.
         return self.cfg['MUI'].getboolean('iMUIPushMany')
+    def dtypePush(self):
+        # read numpy dtype of push coordinats as string from config
+        push_dtype_str = self.cfg['MUI'].get('dtypePush', 'None')  # default None
+        # map string to actual NumPy dtype
+        if push_dtype_str.lower() in ('float32', 'single'):
+            return np.float32
+        elif push_dtype_str.lower() in ('float64', 'double'):
+            return np.float64
+        elif push_dtype_str.lower() in ('int', 'int32'):
+            return np.int32
+        elif push_dtype_str.lower() == 'int64':
+            return np.int64
+        elif push_dtype_str.lower() in ('none', 'default'):
+            return None
+        else:
+            raise ValueError(f"Unsupported dtypePush in config: {push_dtype_str}")
     def iPushX (self):
         # F-Not push X; T-Push X.
         return self.cfg['MUI'].getboolean('iPushX')
@@ -112,6 +128,22 @@ class readData:
     def precondRBF (self):
         # Select of pre-conditionore of the RBF spatial sampler (integer)
         return int(self.cfg['MUI']['precondRBF'])
+    def dtypeFetch(self):
+        # read numpy dtype of fetch coordinats as string from config
+        fetch_dtype_str = self.cfg['MUI'].get('dtypeFetch', 'None')  # default None
+        # map string to actual NumPy dtype
+        if fetch_dtype_str.lower() in ('float32', 'single'):
+            return np.float32
+        elif fetch_dtype_str.lower() in ('float64', 'double'):
+            return np.float64
+        elif fetch_dtype_str.lower() in ('int', 'int32'):
+            return np.int32
+        elif fetch_dtype_str.lower() == 'int64':
+            return np.int64
+        elif fetch_dtype_str.lower() in ('none', 'default'):
+            return None
+        else:
+            raise ValueError(f"Unsupported dtypePush in config: {fetch_dtype_str}")
     def forgetTStepsMUI (self):
         # Numbers of time steps to forget for MUI push (integer)
         return int(self.cfg['MUI']['forgetTStepsMUI'])

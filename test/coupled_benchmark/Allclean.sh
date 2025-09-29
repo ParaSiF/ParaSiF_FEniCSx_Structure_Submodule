@@ -4,8 +4,12 @@ domainFluid=${PWD}/dummyOF
 domainStructure=${PWD}/structureDomain
 
 cd ${domainFluid}
-make clean
+rm -f *.log
 rm dispCpp.txt
+rm PUSHER_FETCHER_1
+cd build make clean
+cd ..
+rm -fr build
 cd ${domainStructure}
 rm -r structureResults*
 rm -r structureFSISetup/__pycache__

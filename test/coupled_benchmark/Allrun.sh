@@ -17,7 +17,17 @@ solverFluid=./PUSHER_FETCHER_1
 solverStructure=structureDomainRun.py
 
 cd ${domainFluid}
-make
+
+# Create build folder
+mkdir build && cd build
+
+# Check if an argument was provided
+cmake -DCMAKE_PREFIX_PATH=$(pwd)/../../../../../../../coupling_lib/MUI ..
+
+# Run make to build the executable
+make 2>&1 | tee make.log && cd ..
+cp build/PUSHER_FETCHER_1 ./
+
 cd ..
 
 # parallel run
