@@ -362,7 +362,9 @@ class linearElastic:
 
         # Wait for the other solver
         if self.iMUICoupling():
-            #self.ifaces3d["threeDInterface0"].barrier(t_sub_it)
-            iface3d.barrier(t_sub_it)
+            if self.iMUIMultidomain():
+                self.ifaces3d["threeDInterface0"].barrier(t_sub_it)
+            else:
+                self.ifaces3d.barrier(t_sub_it)
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%  FILE END  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#

@@ -56,6 +56,9 @@ class readData:
     def iMUICoupling (self):
         # F-Switch off the MUI coupling function; T-Switch on the MUI coupling function.
         return self.cfg['MUI'].getboolean('iMUICoupling')
+    def iMUIMultidomain (self):
+        # F-Switch off the MUI multi-domain coupling mode; T-Switch on the MUI multi-domain coupling mode.
+        return self.cfg['MUI'].getboolean('iMUIMultidomain')
     def iMUIFetchValue (self):
         # F-Switch off the MUI Fetch; T-Switch on the MUI Fetch.
         return self.cfg['MUI'].getboolean('iMUIFetchValue')

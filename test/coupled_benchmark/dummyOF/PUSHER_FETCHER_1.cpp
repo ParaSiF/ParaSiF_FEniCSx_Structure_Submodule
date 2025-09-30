@@ -5,6 +5,8 @@
  *      Author: Wendi Liu
  */
 
+#define IMUI_MULTIDOMAIN 1
+
 #include "mui.h"
 #include <iostream>
 #include <fstream>
@@ -13,21 +15,29 @@
 int main(int argc, char ** argv) {
     using namespace mui;
 
-    uniface<mui::pusher_fetcher_config> ifs( "mpi://PUSHER_FETCHER_1/threeDInterface0"  );
-    
+#if IMUI_MULTIDOMAIN
+
+    // Declare MPI common world with the scope of MUI
     MPI_Comm  world = mui::mpi_split_by_app();
-
-    std::ofstream displacementOutFile("dispCpp.txt");
-
     // Define the name of MUI interfaces
-//    std::vector<std::string> interfaces;
-//    std::string domainName="PUSHER_FETCHER_1";
-//    std::string appName="threeDInterface0";
+    std::vector<std::string> interfaces;
+    std::string domainName="PUSHER_FETCHER_1";
+    std::string appName="threeDInterface0";
 
-//    interfaces.emplace_back(appName);
+    interfaces.emplace_back(appName);
 
     // Declare MUI objects using MUI configure file
-//    auto ifs = mui::create_uniface<mui::pusher_fetcher_config>( domainName, interfaces );
+    auto ifs = mui::create_uniface<mui::pusher_fetcher_config>( domainName, interfaces );
+
+#else
+
+    uniface<mui::pusher_fetcher_config> ifs( "mpi://PUSHER_FETCHER_1/threeDInterface0"  );
+
+    MPI_Comm  world = mui::mpi_split_by_app();
+
+#endif
+
+    std::ofstream displacementOutFile("dispCpp.txt");
 
     int rank, size;
     MPI_Comm_rank( world, &rank );
@@ -109,15 +119,26 @@ int main(int argc, char ** argv) {
     geometry::box<mui::pusher_fetcher_config> send_region( {local_x0, local_y0, local_z0}, {local_x1, local_y1, local_z1} );
     geometry::box<mui::pusher_fetcher_config> recv_region( {local_x2, local_y2, local_z2}, {local_x3, local_y3, local_z3} );
     printf( "{PUSHER_FETCHER_1} send region for rank %d: %lf %lf %lf - %lf %lf %lf\n", rank, local_x0, local_y0, local_z0, local_x1, local_y1, local_z1 );
+
+#if IMUI_MULTIDOMAIN
+    ifs[0]->announce_send_span( 0, steps*10, send_region );
+    ifs[0]->announce_recv_span( 0, steps*10, recv_region );
+#else
     ifs.announce_send_span( 0, steps*10, send_region );
     ifs.announce_recv_span( 0, steps*10, recv_region );
+#endif
 
     // define spatial and temporal samplers
     sampler_pseudo_nearest_neighbor<mui::pusher_fetcher_config> s1(r);
     temporal_sampler_exact<mui::pusher_fetcher_config> s2;
 
+#if IMUI_MULTIDOMAIN
+    // commit ZERO step
+    ifs[0]->commit(0);
+#else
     // commit ZERO step
     ifs.commit(0);
+#endif
 
     // Begin time loops
     for ( int n = 1; n <= steps; ++n ) {
@@ -147,24 +168,48 @@ int main(int argc, char ** argv) {
                         }
 
                         if (std::abs(pp[i][j][k][0] - 20.0) <= 0.00001 ){
-							point3d locp( pp[i][j][k][0], pp[i][j][k][1], pp[i][j][k][2] );
-							ifs.push( name_pushX, locp, force_pushX[i][j][k] );
-							ifs.push( name_pushY, locp, force_pushY[i][j][k] );
-							ifs.push( name_pushZ, locp, force_pushZ[i][j][k] );
-							// std::cout << "!!{PUSHER_FETCHER_1} push point: " <<  locp[0] << ", " <<  locp[1] << ", "<<  locp[2] << std::endl;
-							total_force_Y += force_pushY[i][j][k];
+                            point3d locp( pp[i][j][k][0], pp[i][j][k][1], pp[i][j][k][2] );
+#if IMUI_MULTIDOMAIN
+                            ifs[0]->push( name_pushX, locp, force_pushX[i][j][k] );
+                            ifs[0]->push( name_pushY, locp, force_pushY[i][j][k] );
+                            ifs[0]->push( name_pushZ, locp, force_pushZ[i][j][k] );
+#else
+                            ifs.push( name_pushX, locp, force_pushX[i][j][k] );
+                            ifs.push( name_pushY, locp, force_pushY[i][j][k] );
+                            ifs.push( name_pushZ, locp, force_pushZ[i][j][k] );
+#endif
+                            // std::cout << "!!{PUSHER_FETCHER_1} push point: " <<  locp[0] << ", " <<  locp[1] << ", "<<  locp[2] << std::endl;
+                            total_force_Y += force_pushY[i][j][k];
                         }
                     }
                 }
             }
             printf( "{PUSHER_FETCHER_1} total_force_Y: %lf at time: %f [s]\n", total_force_Y, (n*timeStepSize));
+#if IMUI_MULTIDOMAIN
+            int sent = ifs[0]->commit( totalIter );
+#else
             int sent = ifs.commit( totalIter );
+#endif
             if ((totalIter-1)>=1){
                 // push data to the other solver
                 for ( int i = 0; i < Nx; ++i ) {
                     for ( int j = 0; j < Ny; ++j ) {
                         for ( int k = 0; k < Nz; ++k ) {
                             point3d locf( pf[i][j][k][0], pf[i][j][k][1], pf[i][j][k][2] );
+#if IMUI_MULTIDOMAIN
+                            displacement_fetchX[i][j][k] = ifs[0]->fetch( name_fetchX, locf,
+                                (totalIter-1),
+                                s1,
+                                s2 );
+                            displacement_fetchY[i][j][k] = ifs[0]->fetch( name_fetchY, locf,
+                                (totalIter-1),
+                                s1,
+                                s2 );
+                            displacement_fetchZ[i][j][k] = ifs[0]->fetch( name_fetchZ, locf,
+                                (totalIter-1),
+                                s1,
+                                s2 );
+#else
                             displacement_fetchX[i][j][k] = ifs.fetch( name_fetchX, locf,
                                 (totalIter-1),
                                 s1,
@@ -177,6 +222,7 @@ int main(int argc, char ** argv) {
                                 (totalIter-1),
                                 s1,
                                 s2 );
+#endif
                             if ((std::abs(pf[i][j][k][0] - 20.0) < 0.0001) && (std::abs(pf[i][j][k][1] - 0.0) < 0.0001) && (std::abs(pf[i][j][k][2] - 0.0) < 0.0001)) {
                                 printf( "{PUSHER_FETCHER_1} fetch disp : %lf, %lf, %lf at time: %f [s], i: %d; j: %d; k: %d; pf[i][j][k][0]: %lf\n", displacement_fetchX[i][j][k], displacement_fetchY[i][j][k], displacement_fetchZ[i][j][k], (n*timeStepSize), i, j, k, pf[i][j][k][0]);
                             }
