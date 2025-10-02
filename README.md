@@ -1,7 +1,7 @@
 # ParaSiF FEniCSx Structure Solver
 
 This repository contains the **FEniCSx Structure Solver** integrated with the ParaSiF Parallel Partitioned Simulation Framework.
-It is maintained as a **submodule** of the main ParaSiF repository: [ParaSiF Main Repository](https://github.com/<organization>/ParaSiF).
+It is maintained as a **submodule** of the main ParaSiF repository: [ParaSiF Main Repository](https://github.com/ParaSiF/ParaSiF).
 
 ---
 
