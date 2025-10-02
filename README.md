@@ -1,69 +1,125 @@
 # ParaSiF FEniCSx Structure Solver
 
+This repository contains the **FEniCSx Structure Solver** integrated with the ParaSiF Parallel Partitioned Simulation Framework.
+It is maintained as a **submodule** of the main ParaSiF repository: [ParaSiF Main Repository](https://github.com/ParaSiF/ParaSiF).
+
+---
+
 ## Overview
 
-ParaSiF FEniCSx (v0.9.0) solver
+The FEniCSx Structure Solver in ParaSiF allows the simulation of *structural domains* in **multi-physics partitioned simulations**.
+It is designed to interface with other solvers (e.g., fluid solvers) via the **[MUI coupling library](https://mxui.github.io/)**.
 
-## Folder Structure
+Key features:
 
-* src
+- Linear and Hyper- elasticity solvers.
+- Supports parallel execution for high-performance simulations.
+- Modular design: can be replaced or updated independently of other solvers.
+- Compatible with precompiled or user-installed FEniCSx versions.
 
-It contains the source code on the FEniCSx structure solvers for ParaSiF coupled framework.
+---
 
-* single_benchmark
+## Compatible Codebase
 
-It contains the benchmark test case without MUI related coupling.
+This solver has been tested and is compatible with **[FEniCSx v0.9.0](https://github.com/FEniCS/dolfinx/releases/tag/v0.9.0.post1)**.
 
-* coupled_benchmark
+> Users are recommended to use this version to ensure full compatibility with ParaSiF FEniCSx solvers.
 
-It contains the benchmark case on the FEniCSx linear elasticity solver, based on test case 10.2. Three-dimensional cantilever of Slone et al. 2003:
+---
 
-Slone, A. K., C. Bailey, and M. Cross. "Dynamic solid mechanics using finite volume methods." Applied mathematical modelling 27.2 (2003): 69-87.
+## Location in the Main ParaSiF Repository
 
-There are two sub-folders:
+`ParaSiF/src/structure/FEniCSx/`
 
-1. dummyOF/
-It contains a simple C++ script as a dummy fluid solver. It's function is to pass the node forces to the structure domain through MUI library.
+---
 
-2. structureDomain/
-It contains the input files of FEniCSx solver, includes the main file (structureDomainRun.py), BCs, SubDomains and control parameters. A new subfolder "structureResults" will be generated to collect the results from the FEniCSx solver.
-
-## Install
-
-The dependencies of this ParaSiF FEniCSx are (correct version of) FEniCSx_v0.9.0 and MUI_v2.0.
-
-* Step One: Install FEniCSx (v0.9.0).
-
-Following FEniCSx homepage (https://fenicsproject.org/) for the installation procedure.
-
-* Step Two: Install MUI Python wrapper by (it may take 5-10 min to compile, depends on the performance of the machine):
+## Repository Structure
 
 ```
-cd ParaSiF/coupling/MUI/wrappers/Python
-
-make USE_RBF=1 mui4py_mod
+ParaSiF/src/structure/FEniCSx/
+├── doc/                  # Documentation folder
+├── src/                  # ParaSiF-specific source code folder
+│ └── structureFSISolver/ # FEniCSx solver source code
+└── test/                 # test folder
+  ├── single_benchmark/   # Benchmark test case without MUI coupling
+  └── coupled_benchmark/  # Benchmark case with FEniCSx solver coupled with dummy solver via MUI
 ```
 
-After these two steps, the installation has been finished.
+---
 
-## Run the Benchmark case
+## Installation
 
-* Step One: go to the coupled_benchmark (or single_benchmark) folder.
+**Note:** This solver is a submodule of ParaSiF. Follow the main ParaSiF repository instructions to initialise submodules and install global dependencies.
 
+### Steps
 
-* Step Two: Run the case.
+1. **Obtain and install the codebase**
+   - Initialise the submodule from the main ParaSiF repository (or clone this repository).
+   - Ensure the correct version of FEniCSx is installed by following instructions from the [FEniCSx homepage](https://fenicsproject.org/) (The Spack approach is recommended).
 
-Go to the root of this case and execute the run script by
+2. **Install MUI Python wrapper**
 
+```bash
+cd ParaSiF/coupling_lib/MUI/wrappers/Python
 ```
-./Allrun
-```
-To clean-up the results from previous run, execute the clean script before run
+- Install MUI Python wrapper by following instructions in the [MUI reposirory](https://github.com/MxUI/MUI)
 
-```
-./Allclean
+> There is no need to compile or install the ParaSiF FEniCSx src/structureFSISolver. These Python-based FEniCSx codes are compiled automatically at runtime when executing the solver scripts.
+
+## Running Tests and Example Cases
+
+Benchmark cases are located in the test/ folder:
+
+### Steps
+
+1. Navigate to the desired benchmark folder:
+
+```bash
+cd test/XXX
 ```
 
-* Step Three: Check results.
+2. Run the simulation:
 
-For the benchmark case, once the simulation finished, there will be a PNG file (result_compare.png) generated in the root of this benchmark case. Open it to check the results compared with published results from Slone et al. 2003.
+```bash
+./Allrun.sh
+```
+
+3. (Optional) Clean up previous results before rerunning:
+
+```bash
+./Allclean.sh
+```
+4. Check results:
+
+During runtime, a `structureResults/` folder will be automatically generated in `structureDomain/` to store the solver output (displacements, stresses, checkpoint data, etc.).
+
+For the benchmark case, a `result_compare.png` file will be generated in the benchmark folder. This allows comparison of simulation results with published results from Slone et al. 2003.
+
+For integrated example cases with other solvers, see the example/ folder in the main ParaSiF repository.
+
+## Contributing
+
+ParaSiF, including this submodule, is an **open-source project**, and contributions from the community are warmly welcomed.
+
+There are many ways you can help improve this submodule, including:
+
+- Adding new features, libs or solvers
+- Improving documentation, tests and examples
+- Fixing bugs or refining existing functionality
+- Sharing feedback and suggestions for enhancements
+
+Your contributions, whether large or small, are highly valued and help make ParaSiF a stronger resource for the research community.
+
+For detailed guidance on contributing, please see the [CONTRIBUTING.md](https://github.com/ParaSiF/ParaSiF/blob/main/CONTRIBUTING.md) in the main ParaSiF repository.
+
+## License
+
+Copyright (C) 2021–2025 The ParaSiF Development Team.  
+Licensed under the **GNU General Public License v3 (GPL-3.0)**.
+
+## Contact
+
+For questions or contributions, please contact the ParaSiF Development Team
+
+## References
+- Slone, A. K., Bailey, C., & Cross, M. (2003). Dynamic solid mechanics using finite volume methods. Applied Mathematical Modelling, 27(2), 69-87.
