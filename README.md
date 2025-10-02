@@ -41,8 +41,8 @@ ParaSiF/src/structure/FEniCSx/
 ├── src/                  # ParaSiF-specific source code folder
 │ └── structureFSISolver/ # FEniCSx solver source code
 └── test/                 # test folder
-  ├── single_benchmark/    # Benchmark test case without MUI coupling
-  └── coupled_benchmark/   # Benchmark case with FEniCSx solver coupled with dummy solver via MUI
+  ├── single_benchmark/   # Benchmark test case without MUI coupling
+  └── coupled_benchmark/  # Benchmark case with FEniCSx solver coupled with dummy solver via MUI
 ```
 
 ---
