@@ -127,40 +127,4 @@ if config['MUI'].getboolean('iMUICoupling'):
 else:
     solver.solve()
 
-#_________________________________________________________________________________________
-#
-#%% Ploting
-#_________________________________________________________________________________________
-
-import matplotlib.pyplot as plt
-import numpy as np
-
-x = []
-y = []
-xBench = []
-yBench = []
-xCpp = []
-yCpp = []
-
-for i in np.arange(0.1, 100.1, 0.1):
-  x.append(i)
-for line in open('structureResults/tip-displacementY_0.txt', 'r'):
-    lines = [i for i in line.split()]
-    y.append(float(lines[0]))
-
-for line in open('dataInput/Slone_et_al.txt', 'r'):
-    lines = [i for i in line.split()]
-    xBench.append(float(lines[0]))
-    yBench.append(float(lines[1]))
-
-plt.title("Y-Disp Compare")
-plt.xlabel('Time [s]')
-plt.ylabel('Y-Disp [m]')
-plt.plot(xBench, yBench, label = 'Slone et al. 2003', marker= 'o', linestyle='None', c = 'b')
-plt.plot(x, y, label = 'Present FEniCS Output', linestyle='-', c = 'g')
-plt.xticks(np.arange(0, 101, step=20))
-plt.yticks(np.arange(-0.15, 0.16, step=0.05))
-plt.legend(loc='upper right')
-plt.savefig('../result_compare.png')
-
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%  FILE END  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#
