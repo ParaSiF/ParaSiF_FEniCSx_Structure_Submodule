@@ -34,6 +34,8 @@ cd ..
 mpirun -np ${numProcsFluid} -wdir ${domainFluid} ${solverFluid} -parallel -coupled :\
        -np ${numProcsStructure} -wdir ${domainStructure} python3 -m mpi4py ${solverStructure} 2>&1 | tee output.log
 
+python3 structureDomain/dataInput/ploting.py
+
 echo "Done"
 
 # ----------------------------------------------------------------- end-of-file
