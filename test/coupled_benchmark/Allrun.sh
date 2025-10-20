@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1
 export PYTHONPATH=${PWD}/../../src:$PYTHONPATH
 export PYTHONPATH=${PWD}../../../../../coupling_lib/MUI/wrappers/Python:$PYTHONPATH
 
-domainFluid=${PWD}/dummyOF
+domainFluid=${PWD}/dummyFluid
 domainStructure=${PWD}/structureDomain
 
 # Ranks set to each domain

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-domainFluid=${PWD}/dummyOF
+domainFluid=${PWD}/dummyFluid
 domainStructure=${PWD}/structureDomain
 
 cd ${domainFluid}
